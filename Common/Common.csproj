@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DD3C8139-1FD5-4340-A660-6B29EF710FA1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Common</RootNamespace>
+    <AssemblyName>Common</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MongoDB.Bson, Version=2.4.0.70, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Bson.2.4.0\lib\net45\MongoDB.Bson.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.3.11\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Domain\AppLog.cs" />
+    <Compile Include="Domain\Conveyor\ConveyorSettings.cs" />
+    <Compile Include="Domain\Conveyor\TagColumn.cs" />
+    <Compile Include="Domain\DBEntityBase.cs" />
+    <Compile Include="Domain\DeviceResults\EntityDeviceResult.cs" />
+    <Compile Include="Domain\Device\DeviceConfig.cs" />
+    <Compile Include="Domain\DeviceResults\BulkWriteSettingsResult.cs" />
+    <Compile Include="Domain\DeviceResults\TestActionCommands\DigitalIOResult.cs" />
+    <Compile Include="Domain\DeviceResults\TestActionCommands\HardwareVersionResult.cs" />
+    <Compile Include="Domain\DeviceResults\TestModuleCommands\GetStatusResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\BoardTemperatureResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\CalibrateResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\CameraOutputsResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\DeviceActionStatusResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\DeviceActivityStateResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\DevicePowerSwitchResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\DeviceStatusResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\GPI0RFIDInputResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\GPI1RFIDInputResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\GpioRfidReaderStatusResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\DeviceHighSpeedTestResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\HighSpeedGPIOTestResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\HighSpeedReaderTestResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\MACAddressResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\ReadDipSwitchesResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\RFPowerMeterResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\TwinkleLEDResult.cs" />
+    <Compile Include="Domain\DeviceResults\GSTCommands\WifiNetworkSettingsResult.cs" />
+    <Compile Include="Domain\DeviceResults\TestModuleCommands\LastFaultResult.cs" />
+    <Compile Include="Domain\DeviceResults\TestModuleCommands\LastMessageResult.cs" />
+    <Compile Include="Domain\DeviceResults\UnsolicitedReplyCommands\EventResult.cs" />
+    <Compile Include="Domain\DeviceResults\UnsolicitedReplyCommands\FaultResult.cs" />
+    <Compile Include="Domain\DeviceResults\UnsolicitedReplyCommands\MessageResult.cs" />
+    <Compile Include="Domain\DeviceResults\UnsolicitedReplyCommands\SensitivityTestResult.cs" />
+    <Compile Include="Domain\DeviceResults\TestModuleCommands\ResetResult.cs" />
+    <Compile Include="Domain\DeviceResults\TestModuleCommands\TestRFSettingsResult.cs" />
+    <Compile Include="Domain\DeviceResults\TestModuleCommands\VersionResult.cs" />
+    <Compile Include="Domain\Device\DeviceIdentity.cs" />
+    <Compile Include="Domain\ExtendedTestSetupCommands\PunchSettings.cs" />
+    <Compile Include="Domain\GSTCommands\CalibrateSettings.cs" />
+    <Compile Include="Domain\GSTCommands\HighSpeedTestModeTimer.cs" />
+    <Compile Include="Domain\GSTCommands\MotorSpeed.cs" />
+    <Compile Include="Domain\GSTCommands\RFPowerMeterSettings.cs" />
+    <Compile Include="Domain\TestModuleCommands\LaneDateTime.cs" />
+    <Compile Include="Domain\TestModuleCommands\ResetSettings.cs" />
+    <Compile Include="Domain\TestModuleCommands\TestRFSettings.cs" />
+    <Compile Include="Domain\TestSetupCommands\AntennaSettings.cs" />
+    <Compile Include="Domain\TestSetupCommands\AutoMarkerSettings.cs" />
+    <Compile Include="Domain\TestSetupCommands\AutoTestSettings.cs" />
+    <Compile Include="Domain\TestSetupCommands\AuxSettings.cs" />
+    <Compile Include="Domain\Conveyor\ConveyorShot.cs" />
+    <Compile Include="Domain\DeviceResults\UnsolicitedReplyCommands\SendRFDataResult.cs" />
+    <Compile Include="Domain\DeviceResults\TestActionCommands\SensitivityTriggerInputResult.cs" />
+    <Compile Include="Domain\DeviceResults\UnsolicitedReplyCommands\TestE3Result.cs" />
+    <Compile Include="Domain\TestSetupCommands\EncoderSettings.cs" />
+    <Compile Include="Domain\DeviceResults\GeneralDeviceResult.cs" />
+    <Compile Include="Domain\Conveyor\LinearEncoderData.cs" />
+    <Compile Include="Domain\Conveyor\LinearEncoderDataItem.cs" />
+    <Compile Include="Domain\PingTestDomainObject.cs" />
+    <Compile Include="Domain\Conveyor\RFIDReaderData.cs" />
+    <Compile Include="Domain\Conveyor\RFIDTag.cs" />
+    <Compile Include="Domain\Conveyor\VNAData.cs" />
+    <Compile Include="Domain\Conveyor\VNADataItem.cs" />
+    <Compile Include="Domain\TestSetupCommands\MarkerSettings.cs" />
+    <Compile Include="Domain\TestSetupCommands\SensitivityTestSettings.cs" />
+    <Compile Include="Domain\TestSetupCommands\TagIDFilterSettings.cs" />
+    <Compile Include="Domain\TestSetupCommands\TesterSettings.cs" />
+    <Compile Include="Domain\TestSetupCommands\TestSettings.cs" />
+    <Compile Include="Domain\TestSetupCommands\TestStatistics.cs" />
+    <Compile Include="Domain\TestSetupCommands\TIDTestSettings.cs" />
+    <Compile Include="Domain\TestSetupCommands\TriggerInputSettings.cs" />
+    <Compile Include="Enums\AntPort.cs" />
+    <Compile Include="Enums\AppMode.cs" />
+    <Compile Include="Enums\CommandsProcessingMode.cs" />
+    <Compile Include="Enums\DeviceType.cs" />
+    <Compile Include="Enums\Direction.cs" />
+    <Compile Include="Enums\TestActionCommands\BoardType.cs" />
+    <Compile Include="Enums\EdgeType.cs" />
+    <Compile Include="Enums\AuxSettingsFunction.cs" />
+    <Compile Include="Enums\CalibrationStatus.cs" />
+    <Compile Include="Enums\EnableMode.cs" />
+    <Compile Include="Enums\GSTCommands\ActivityState.cs" />
+    <Compile Include="Enums\GSTCommands\CalibrateMode.cs" />
+    <Compile Include="Enums\GSTCommands\HighSpeedTestDeviceType.cs" />
+    <Compile Include="Enums\GSTCommands\PowerMeterRequest.cs" />
+    <Compile Include="Enums\GSTCommands\PowerMode.cs" />
+    <Compile Include="Enums\InputResetType.cs" />
+    <Compile Include="Enums\TestActionCommands\InputDigitalValue.cs" />
+    <Compile Include="Enums\MarkerEnableMode.cs" />
+    <Compile Include="Enums\FaultCode.cs" />
+    <Compile Include="Enums\OutputResetType.cs" />
+    <Compile Include="Enums\UnsolicitedReplyCommands\EventID.cs" />
+    <Compile Include="Enums\UnsolicitedReplyCommands\PassState.cs" />
+    <Compile Include="Enums\PunchEnableMode.cs" />
+    <Compile Include="Enums\ReadWriteMode.cs" />
+    <Compile Include="Enums\RFTemperature.cs" />
+    <Compile Include="Enums\StatusCode.cs" />
+    <Compile Include="Enums\TagClass.cs" />
+    <Compile Include="Enums\Test10Type.cs" />
+    <Compile Include="Enums\SensitivityTestOptions.cs" />
+    <Compile Include="Enums\TestActionCommands\OutputDigitalValue.cs" />
+    <Compile Include="Enums\TestMode.cs" />
+    <Compile Include="Enums\UnsolicitedReplyCommands\TestE3Status.cs" />
+    <Compile Include="Enums\UnsolicitedReplyCommands\TestE3Type.cs" />
+    <Compile Include="Enums\WriteType.cs" />
+    <Compile Include="Infrastructure\Constants\ConfigConstants.cs" />
+    <Compile Include="Infrastructure\Devices\DeviceConfigSection.cs" />
+    <Compile Include="Infrastructure\ErrorHandling\Exceptions\DeviceNotFoundException.cs" />
+    <Compile Include="Infrastructure\ErrorHandling\Exceptions\HidDeviceDataIncorrectException.cs" />
+    <Compile Include="Infrastructure\Constants\LoggerCustomLayouts.cs" />
+    <Compile Include="Infrastructure\Extensions\DeviceConfigExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\LogExtensions.cs" />
+    <Compile Include="Infrastructure\IAppContext.cs" />
+    <Compile Include="Infrastructure\Logging\LogLevel.cs" />
+    <Compile Include="Infrastructure\Logging\_DbLogger.cs" />
+    <Compile Include="Infrastructure\Logging\_FileLogger.cs" />
+    <Compile Include="Infrastructure\Logging\LayoutRenderers\_CallerLineNumberLayoutRenderer.cs" />
+    <Compile Include="Infrastructure\Logging\LayoutRenderers\_CallMemberFilePathLayoutRenderer.cs" />
+    <Compile Include="Infrastructure\Logging\LayoutRenderers\_CallMemberLayoutRenderer.cs" />
+    <Compile Include="Services\Input\SvcInputBase.cs" />
+    <Compile Include="Services\Input\SvcInputGeneric.cs" />
+    <Compile Include="Services\Output\SvcOutputBase.cs" />
+    <Compile Include="Services\Output\SvcOutputGeneric.cs" />
+    <Compile Include="Infrastructure\ErrorHandling\Enums\ErrorCode.cs" />
+    <Compile Include="Infrastructure\ErrorHandling\Exceptions\BusinessLogicException.cs" />
+    <Compile Include="Infrastructure\ErrorHandling\Extensions\EnumExtension.cs" />
+    <Compile Include="Infrastructure\ErrorHandling\Helpers\ErrorMessageHelper.cs" />
+    <Compile Include="Infrastructure\ErrorHandling\Output\ErrorDetails.cs" />
+    <Compile Include="Infrastructure\Logging\Logger.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ServiceBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Services\packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,130 @@
+﻿using Client.Server.Communication.RemoteServices.ServiceContracts;
+using System;
+using System.Collections.Generic;
+using System.ServiceModel;
+using Client.Server.Communication.ServiceContracts.Dtos.Input;
+using Client.Server.Communication.ServiceContracts.Dtos.Output;
+using Common.Services.Input;
+using Common.Services.Output;
+using Client.Server.Communication.RemoteServices.Dtos.Input;
+using Client.Server.Communication.RemoteServices.Dtos.Output;
+using Common.Domain;
+using Common.Domain.Device;
+using Common.Domain.DeviceResults;
+using Common.Domain.TestModuleCommands;
+using Common.Domain.Conveyor;
+using Common.Domain.DeviceResults.TestModuleCommands;
+using Common.Domain.TestSetupCommands;
+
+namespace Client.UIApp.RemoteServices.Clients
+{
+    public class AverySvcClient : ClientBase<IAveryServerSvc>, IAveryServerSvc
+    {  
+	    public SendToDeviceCommonResultSvcOutput SetEncoderSettings(SetEncoderSettingsGroupSvcInput cmdInput)
+        {
+            return Channel.SetEncoderSettings(cmdInput);
+        }
+
+	    public StartTestingSvcOutput StartTesting(StartTestingSvcInput cmdInput)
+        {
+            return Channel.StartTesting(cmdInput);
+        }
+
+        public SendToDeviceCommonResultSvcOutput StopTesting()
+        {
+            throw new NotImplementedException();
+        }
+
+		public SvcOutputGeneric<DeviceConfig> PreInitialize()
+		{
+			return Channel.PreInitialize();
+		}
+
+		public CheckDevicesInstalledOutput CheckDevicesInitStatus()
+		{
+			return Channel.CheckDevicesInitStatus();
+		}
+
+		public SvcOutputBase Initialize(SvcInputGeneric<DeviceConfig> inputConfig)
+		{
+			return Channel.Initialize(inputConfig);
+		}
+
+	    public SvcOutputBase StartDeviceListening()
+	    {
+		    return Channel.StartDeviceListening();
+	    }
+
+	    public SvcOutputGeneric<List<DeviceIdentity>> GetInitializedDevices()
+	    {
+		    return Channel.GetInitializedDevices();
+	    }
+
+	    public SvcOutputBase InitializeStep2(SvcInputGeneric<List<DeviceIdentity>> devices)
+	    {
+		    return Channel.InitializeStep2(devices);
+	    }
+
+        public SvcOutputGeneric<GeneralDeviceResult> Ping(SvcInputGeneric<string> pingInput)
+        {
+            return Channel.Ping(pingInput);
+        }
+
+        public SvcOutputGeneric<GeneralDeviceResult> SetDateTime(SetDataToDeviceSvcInput<LaneDateTime> setDateTimeInput)
+        {
+            return Channel.SetDateTime(setDateTimeInput);
+        }
+
+        public SvcOutputGeneric<EntityDeviceResult<LaneDateTime>> GetDateTime(SvcInputGeneric<string> getDateTimeInput)
+        {
+            return Channel.GetDateTime(getDateTimeInput);
+        }
+
+        public SvcOutputGeneric<List<ConveyorShot>> GetShapshotsForTimeInterval(GetShapshotsForTimeIntervalSvcInput input)
+        {
+            return Channel.GetShapshotsForTimeInterval(input);
+        }
+
+        public SvcOutputGeneric<List<DeviceCommandLogTransferItem>> GetDeviceDataLogItems()
+        {
+            return Channel.GetDeviceDataLogItems();
+        }
+
+	    public SvcOutputBase ReinstallDsf()
+	    {
+		    return Channel.ReinstallDsf();
+	    }
+
+	    public SvcOutputBase Reset()
+	    {
+		    return Channel.Reset();
+	    }
+
+<<<<<<< HEAD
+	    public SvcOutputBase StartHighSpeedTest()
+	    {
+		    return Channel.StartHighSpeedTest();
+	    }
+=======
+        public SvcOutputGeneric<GeneralDeviceResult> SetTagIdFilterSettings(SetDataToDeviceSvcInput<TagIDFilterSettings> setTagIdFilterInput)
+        {
+            return Channel.SetTagIdFilterSettings(setTagIdFilterInput);
+        }
+
+        public SvcOutputGeneric<EntityDeviceResult<VersionResult>> GetVersion(SvcInputGeneric<string> getVersionInput)
+        {
+            return Channel.GetVersion(getVersionInput);
+        }
+
+        public SvcOutputGeneric<EntityDeviceResult<TagIDFilterSettings>> GetTagIdFilterSettings(SvcInputGeneric<string> getTagIdFilterInput)
+        {
+            return Channel.GetTagIdFilterSettings(getTagIdFilterInput);
+        }
+
+        public SvcOutputGeneric<EntityDeviceResult<LastFaultResult>> GetLastFault(SvcInputGeneric<string> getLastFaultInput)
+        {
+            return Channel.GetLastFault(getLastFaultInput);
+        }
+>>>>>>> 4f172bca43ef4829b596bb3d0b1c846b05b08695
+    }
+}

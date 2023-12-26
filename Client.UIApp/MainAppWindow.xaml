@@ -1,0 +1,301 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client.UIApp"        
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        x:Class="Client.UIApp.MainAppWindow"
+        mc:Ignorable="d"
+        Title="{Binding Path=Title, Source={x:Static vm:DevicesContext.Instance}, UpdateSourceTrigger=PropertyChanged}" Width="1920" Height="1080"
+        xmlns:uielemlog="clr-namespace:Client.UIApp.UIElements.LogView"
+        xmlns:le="clr-namespace:Client.UIApp.UIElements"
+        xmlns:bconf="clr-namespace:Client.UIApp.UIElements.BasicConfigurationView"
+        xmlns:mfl="clr-namespace:Client.UIApp.UIElements.TestModeFlagsView"
+        xmlns:setstat="clr-namespace:Client.UIApp.UIElements.SetStatisticsView"
+        xmlns:settidset="clr-namespace:Client.UIApp.UIElements.TIDSettingsView"
+        xmlns:setidfilt="clr-namespace:Client.UIApp.UIElements.TagIDFilterSettingsView"
+        xmlns:sensset="clr-namespace:Client.UIApp.UIElements.SensitivitySettingsView"
+        xmlns:confrwset="clr-namespace:Client.UIApp.UIElements.ConfigureReadWriteSettingsView"
+        xmlns:rdrset="clr-namespace:Client.UIApp.UIElements.ReaderSettingsView"
+        xmlns:antset="clr-namespace:Client.UIApp.UIElements.AntennaSettingsView"
+        xmlns:marset="clr-namespace:Client.UIApp.UIElements.MarkerSettingsView"
+        xmlns:punset="clr-namespace:Client.UIApp.UIElements.PuncherSettingsView"
+        xmlns:triginset="clr-namespace:Client.UIApp.UIElements.TriggerInputSettingsView"
+        xmlns:auxinset="clr-namespace:Client.UIApp.UIElements.AuxInSettingsView"
+        xmlns:encset="clr-namespace:Client.UIApp.UIElements.EncoderSettingsView"
+        xmlns:gpioset="clr-namespace:Client.UIApp.UIElements.GPIOSettingsView"
+            xmlns:conver="clr-namespace:Client.UIApp.Converters"
+        xmlns:intl="clr-namespace:Client.UIApp.UIElements.InitializationView"
+        xmlns:vm="clr-namespace:Client.UIApp.ViewModels"
+        WindowStartupLocation="CenterScreen"
+         d:DesignHeight="2900" DataContext="{Binding}"        
+    >
+    <Window.Resources>
+        <conver:IsNotNullConverter x:Key="isNotNullConverter" />
+        <conver:SelectedDeviceVMIsSpecificToBoolConverter x:Key="selectedDeviceVMIsSpecificToBoolConverter"/>
+        <conver:BooleanToVisibilityClpsConverter x:Key="booleanToVisibilityClpsConverter" />
+        <conver:InverseBooleanConverter x:Key="inverseBooleanConverter" />
+    </Window.Resources>
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <xctk:MaterialTabControl x:Name="_tabCtrl"  TabStripPlacement="Top"
+                                        IsInkEffectActive="True"
+                                        IsInkBarActive="True"
+                                        IsSlidingAnimationActive="True" SelectedIndex="{Binding Source={x:Static vm:UserStepContext.Instance}, Path=CurrentStepIndex, Mode=OneWay}">
+            <xctk:MaterialTabItem 
+                IsEnabled="{Binding Source={x:Static vm:UserStepContext.Instance}, Path=StepToEnabledAndVisibilityStateDict[(vm:UserStep)Initialization].Enabled }" 
+                Header="Initialization" >
+                <intl:InitializationView DataContext="{Binding InitializeViewModel}"/>
+            </xctk:MaterialTabItem>
+
+            <xctk:MaterialTabItem x:Name="_tabSettings" Header="Sensors Settings"
+                                  IsEnabled="{Binding Source={x:Static vm:UserStepContext.Instance}, Path=StepToEnabledAndVisibilityStateDict[(vm:UserStep)SetSettings].Enabled }" 
+                                  HorizontalContentAlignment="Stretch" DataContext="{Binding SettingsViewModel}" Margin="5,0,-4,0">
+                <xctk:BusyIndicator IsBusy="{Binding IsBusy}" >
+                    <ScrollViewer Margin="10,0,0,0">
+                        <StackPanel x:Name="_setStPan">
+                            <DockPanel Margin="0,15,0,15">
+                                <xctk:MaterialButton IsEnabled="false" DockPanel.Dock="Left" Padding="5">Create New Recipe</xctk:MaterialButton>
+                                <xctk:MaterialButton DockPanel.Dock="Right" Padding="5" Command="{Binding SaveAllSettingsCommand}"
+                                                     IsEnabled="{Binding Source={x:Static vm:DevicesContext.Instance}, Path=IsRunning, Converter={StaticResource inverseBooleanConverter}}">Send Recipe</xctk:MaterialButton>
+                                <StackPanel/>
+                            </DockPanel>
+
+                            <Grid Margin="0,10,5,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1*" />
+                                </Grid.ColumnDefinitions>
+                                <xctk:WatermarkTextBox IsEnabled="false" FontSize="16" Watermark="Create Recipe Title" Text="{Binding Path=DataContext.Test2, ElementName=_tabSettings}" ></xctk:WatermarkTextBox>
+                                <xctk:MaterialButton Padding="4" Margin="15,0,0,3" Grid.Column="1" Command="{Binding ExecuteGetCommandsCommand}"
+                                                     IsEnabled="{Binding Source={x:Static vm:DevicesContext.Instance}, Path=IsRunning, Converter={StaticResource inverseBooleanConverter}}">Execute Get Commands</xctk:MaterialButton>
+                            </Grid>
+
+                            <Expander IsExpanded="True" Header="Basic Cofiguration" Margin="0,20,5,0" Padding="0,10,0,0">
+                                <bconf:BasicConfigurationView ClearLastFaultClick="BasicConfigurationView_ClearLastFaultClick" ResetClick="BasicConfigurationView_ResetClick" PingClick="BasicConfigurationView_PingClick" DataContext="{Binding BasicConfigurationViewModel}" />
+                            </Expander>
+
+                            <Expander IsExpanded="True" Margin="0,20,5,0" Padding="0,10,0,0" Header="Test Module Cofiguration" >
+                                <StackPanel >
+                                    <mfl:TestModeFlagsView Margin="8,0,0,0" DataContext="{Binding Path=DataContext.TestModeFlagsViewModel, ElementName=_tabSettings}" 
+                                                           IsEnabled="{Binding Path=SelectedItem, ElementName=_cbTestModuleDevices, Converter={StaticResource isNotNullConverter}}"
+                                                           />
+                                    <setstat:SetStatisticsView Margin="8,10,0,0" DataContext="{Binding Path=DataContext.SetStatisticsViewModel, ElementName=_tabSettings}"/>
+                                    <Border Background="#EEEEEE" BorderBrush="LightGray" BorderThickness="1" CornerRadius="8,8,3,3" Margin="0,10,0,0">
+                                        <StackPanel Margin="8">
+                                            <xctk:WatermarkComboBox Width="400" HorizontalAlignment="Left" x:Name="_cbTestModuleDevices"
+                                                                    ItemsSource="{Binding Source={x:Static vm:DevicesContext.Instance}, Path=ReadersInclAll}"                                                                      
+                                                                    SelectedValue="{Binding DataContext.SelectedDeviceInTestModuleCofiguration, ElementName=_tabSettings}" Watermark="Choose device"
+                                                                    DisplayMemberPath="DisplayText"/>
+
+                                            <Separator BorderThickness="1" BorderBrush="LightGray" Margin="0,5,0,0" />
+                                            <settidset:TIDSettingsView Margin="0,5,0,0" IsEnabled="{Binding Path=DataContext.TIDSettingsEnabled, ElementName=_tabSettings}" DataContext="{Binding Path=DataContext.TIDSettingsViewModel, ElementName=_tabSettings}" />
+                                            <setidfilt:TagIDFilterSettingsView Margin="0,10,0,0" IsEnabled="{Binding Path=DataContext.TagIDFilterSettingsEnabled, ElementName=_tabSettings}" DataContext="{Binding Path=DataContext.TagIDFilterSettingsViewModel, ElementName=_tabSettings}" />
+                                            <sensset:SensitivitySettingsView Margin="0,10,0,0" 
+                                                                             IsEnabled="{Binding Path=DataContext.SensitivitySettingsEnabled, ElementName=_tabSettings}" 
+                                                                             DataContext="{Binding Path=DataContext.SensivitySettingsViewModel, ElementName=_tabSettings}"/>
+                                            <confrwset:ConfigureReadWriteSettingsView Margin="0,10,0,0" DataContext="{Binding Path=DataContext.ConfigureReadWriteSettingsViewModel, ElementName=_tabSettings}" 
+                                                                                      ReadEnabled="{Binding Path=DataContext.ReadEPCTestEnabled, ElementName=_tabSettings}"
+                                                                                      WriteEnabled="{Binding Path=DataContext.WriteEPCTestEnabled, ElementName=_tabSettings}"
+                                                                                      />
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Expander>
+
+                            <Expander IsExpanded="True" Margin="0,20,5,0" Padding="0,10,0,0" Header="Hardware Configuration" >
+                                <StackPanel>
+                                    <Border Background="#EEEEEE" BorderBrush="LightGray" BorderThickness="1" CornerRadius="8,8,3,3" Margin="0,10,0,0">
+                                        <StackPanel Margin="8">
+                                            <xctk:WatermarkComboBox Grid.Column="1" Width="400" HorizontalAlignment="Left" x:Name="_cbHwDevice"
+                                                                    ItemsSource="{Binding Source={x:Static vm:DevicesContext.Instance}, Path=ReadersInclAll}"                                                                      
+                                                                    SelectedValue="{Binding DataContext.SelectedDeviceInHardwareCofiguration, ElementName=_tabSettings}" Watermark="Choose device"
+                                                                    DisplayMemberPath="DisplayText"/>                                            
+                                            <Separator BorderThickness="1" BorderBrush="LightGray" Margin="0,5,0,0" />
+                                            
+                                            <rdrset:ReaderSettingsView  Margin="0,5,0,0" 
+                                                                        IsEnabled="{Binding Path=DataContext.SelectedDeviceInHardwareCofiguration, ElementName=_tabSettings, Converter={StaticResource isNotNullConverter}}"
+                                                                        DataContext="{Binding DataContext.ReaderSettingsViewModel, ElementName=_tabSettings}"
+                                                                        />
+                                            <antset:AntennaSettingsView Margin="0,10,0,0"  
+                                                                        IsEnabled="{Binding Path=DataContext.SelectedDeviceInHardwareCofiguration, ElementName=_tabSettings, Converter={StaticResource isNotNullConverter}}"
+                                                                        DataContext="{Binding DataContext.AntennaSettingsViewModel, ElementName=_tabSettings}"
+                                                                        />
+                                            <marset:MarkerSettingsView Margin="0,10,0,0" 
+                                                                       IsEnabled="{Binding Path=DataContext.SelectedDeviceInHardwareCofiguration, ElementName=_tabSettings, Converter={StaticResource isNotNullConverter}}"
+                                                                       DataContext="{Binding DataContext.MarkerSettingsViewModel, ElementName=_tabSettings}"
+                                                                       />
+                                            <punset:PuncherSettingsView Margin="0,10,0,0" 
+                                                                       IsEnabled="{Binding Path=DataContext.SelectedDeviceInHardwareCofiguration, ElementName=_tabSettings, Converter={StaticResource isNotNullConverter}}"
+                                                                       DataContext="{Binding DataContext.PuncherSettingsViewModel, ElementName=_tabSettings}"
+                                                                       />
+                                        </StackPanel>
+                                    </Border>
+
+                                    <triginset:TriggerInputSettingsView Margin="8,10,0,0" 
+                                                                        IsEnabled="{Binding Path=DataContext.SelectedDeviceInHardwareCofiguration, ElementName=_tabSettings, Converter={StaticResource isNotNullConverter}}"
+                                                                        DataContext="{Binding DataContext.TriggerInputSettingsViewModel, ElementName=_tabSettings}"
+                                                                        />
+                                    <auxinset:AuxInSettingsView Margin="8,10,0,0" 
+                                                                IsEnabled="{Binding Path=DataContext.SelectedDeviceInHardwareCofiguration, ElementName=_tabSettings, Converter={StaticResource isNotNullConverter}}"
+                                                                DataContext="{Binding DataContext.AuxInSettingsViewModel, ElementName=_tabSettings}"
+                                                                />
+                                    <encset:EncoderSettingsView Margin="8,10,0,0" 
+                                                                IsEnabled="{Binding Path=DataContext.SelectedDeviceInHardwareCofiguration, ElementName=_tabSettings, Converter={StaticResource isNotNullConverter}}"
+                                                                DataContext="{Binding DataContext.EncoderSettingsViewModel, ElementName=_tabSettings}"
+                                                                />
+
+                                    <Separator BorderThickness="1" BorderBrush="LightGray" Margin="0,5,0,0" />
+
+                                    <gpioset:GPIOSettingsView Margin="8,10,0,0" 
+                                                              DataContext="{Binding DataContext.GPIOSettingsViewModel, ElementName=_tabSettings}"
+                                                              />
+
+                                    <Separator BorderThickness="2" BorderBrush="LightGray" Margin="0,15,0,0" />
+                                    
+                                    <DockPanel Margin="0,15,0,15">
+                                        <xctk:MaterialButton IsEnabled="false" DockPanel.Dock="Left" Padding="5">Save Tempalte</xctk:MaterialButton>
+                                        <xctk:MaterialButton DockPanel.Dock="Right" Padding="5" Command="{Binding SaveAllSettingsCommand}"
+                                                             IsEnabled="{Binding Source={x:Static vm:DevicesContext.Instance}, Path=IsRunning, Converter={StaticResource inverseBooleanConverter}}">
+                                            Send Recipe</xctk:MaterialButton>
+                                        <StackPanel/>
+                                    </DockPanel>
+                                </StackPanel>
+                            </Expander>
+                            
+                            
+                        </StackPanel>
+                    </ScrollViewer>
+                </xctk:BusyIndicator>
+            </xctk:MaterialTabItem>
+            <xctk:MaterialTabItem Header="Real Time"                                        
+                                  HorizontalContentAlignment="Stretch"
+                                  IsEnabled="{Binding Source={x:Static vm:UserStepContext.Instance}, Path=StepToEnabledAndVisibilityStateDict[(vm:UserStep)RealtimeTest].Enabled }"
+                                  DataContext="{Binding RealTimeViewModel}"
+                                  >
+                <xctk:BusyIndicator IsBusy="{Binding IsBusy}" >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="0,10,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180px"/>
+                                <ColumnDefinition Width="0.2*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <le:LabelSectionBlock FontSize="16" FontWeight="DemiBold" Grid.Row="0" Grid.ColumnSpan="4" Text="Conveyor Settings"/>
+
+                            <xctk:DoubleUpDown Value="{Binding Path=ConveyorSettingsViewModel.ConveyorSettings.TagLengthInMm}" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,10,0,0" Minimum="5" Maximum="200"  />
+                            <le:LabelBlock Margin="5,0,0,0" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Text="Tag Length (mm)"/>
+
+                            <xctk:DoubleUpDown Value="{Binding Path=ConveyorSettingsViewModel.ConveyorSettings.DistanceBetweenTagsInMm}" Grid.ColumnSpan="2" Grid.Row="2" Margin="0,5,0,0" Minimum="2" Maximum="200"/>
+                            <le:LabelBlock Margin="5,0,0,0" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Text="Distance Between Tags (mm)"/>
+
+                            <xctk:DoubleUpDown Value="{Binding Path=ConveyorSettingsViewModel.ConveyorSettings.TagsCountPerLane}" Grid.ColumnSpan="2" Grid.Row="3" Margin="0,5,0,0" Minimum="50" Maximum="200" IsEnabled="False"/>
+                            <le:LabelBlock Margin="5,0,0,0" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Text="Tags Count On Lane (for animation and processing)"/>
+
+                            <xctk:DoubleUpDown Visibility="{Binding Source={x:Static vm:DevicesContext.Instance}, Path=IsSimulator, Converter={StaticResource booleanToVisibilityClpsConverter}}" 
+                                           Value="{Binding Path=ConveyorSettingsViewModel.ConveyorSettings.EncoderReaderTagsDistance}"  Grid.ColumnSpan="2" Grid.Row="4" Margin="0,5,0,0" Minimum="5" Maximum="100" />
+                            <le:LabelBlock Visibility="{Binding Source={x:Static vm:DevicesContext.Instance}, Path=IsSimulator, Converter={StaticResource booleanToVisibilityClpsConverter}}"
+                            Margin="5,0,0,0" Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" Text="Encoder-Reader Distance (tags)"/>
+
+                            <xctk:DoubleUpDown Visibility="Collapsed" Value="{Binding Path=ConveyorSettingsViewModel.ConveyorSettings.ReaderMarkerTagsDistance}" Grid.ColumnSpan="2" Grid.Row="5" Margin="0,5,0,0" Minimum="5" Maximum="100"/>
+                            <le:LabelBlock Visibility="Collapsed" Margin="5,0,0,0" Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Text="Reader-Marker Distance (tags)"/>
+
+                            <xctk:DoubleUpDown Visibility="Collapsed" Value="{Binding Path=ConveyorSettingsViewModel.ConveyorSettings.MarkerPuncherTagsDistance}"  Grid.ColumnSpan="2" Grid.Row="6" Margin="0,5,0,0" Minimum="5" Maximum="100"/>
+                            <le:LabelBlock Visibility="Collapsed" Margin="5,0,0,0" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2" Text="Marker-Puncher Distance (tags)"/>
+
+                        </Grid>
+
+                        <Grid Grid.Row="1" Visibility="{Binding Source={x:Static vm:DevicesContext.Instance}, Path=IsSimulator, Converter={StaticResource booleanToVisibilityClpsConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180px"/>
+                                <ColumnDefinition Width="0.2*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <xctk:DoubleUpDown Value="{Binding Path=ConveyorSettingsViewModel.ConveyorSettings.EncoderStepsPerTag}" Grid.ColumnSpan="2" Grid.Row="0" Margin="0,5,0,0" Minimum="1" Maximum="4" />
+                            <le:LabelBlock Margin="5,0,0,0" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Text="Number of Encoder triggers per tag surface"/>
+
+                            <xctk:DoubleUpDown Value="{Binding Path=ConveyorSettingsViewModel.ConveyorSettings.VelocityTagsPerSec}" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,5,0,0" Minimum="5" Maximum="40" />
+                            <le:LabelBlock Margin="5,0,0,0" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Text="Velocity (tags per sec)"/>
+
+                            <xctk:DoubleUpDown Value="{Binding Path=ConveyorSettingsViewModel.ConveyorSettings.TestTagsNumber}" Grid.ColumnSpan="2" Grid.Row="2" Margin="0,5,0,0" Minimum="10" Maximum="1000000"/>
+                            <le:LabelBlock Margin="5,0,0,0" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Text="Tags Count geenrated per single test"/>
+                        </Grid>
+
+                        <xctk:WatermarkTextBox  Style="{StaticResource ResourceKey=InitPageSesionName}" Text="{Binding Path=TestName, Source={x:Static vm:DevicesContext.Instance}, UpdateSourceTrigger=PropertyChanged}" FontSize="16" Grid.Row="2" Watermark="Please, type test name for reference" Margin="0,10,0,0" />
+
+                        <Separator Grid.Row="3" Margin="0,10,0,0"/>
+
+                        <StackPanel Orientation="Vertical" Grid.Row="4" Margin="0,10,0,0">
+                            <UniformGrid Columns="2"  >
+                                <xctk:MaterialButton Background="Green" FontSize="20" Padding="10" Command="{Binding StartTestCommand}" Margin="0,10,0,0" IsEnabled="{Binding IsRunning, Converter={StaticResource inverseBooleanConverter}}">Start Test</xctk:MaterialButton>
+                                <xctk:MaterialButton Background="Red" FontSize="20" Padding="10" Command="{Binding StopTestCommand}"  Margin="10,10,0,0" IsEnabled="{Binding IsRunning}">Stop Test</xctk:MaterialButton>
+                            </UniformGrid>
+                            <TextBlock FontWeight="DemiBold" FontSize="30" Margin="0,20,0,0" Foreground="DarkGoldenrod" Text="Test is running...."
+                                       Visibility="{Binding Source={x:Static vm:DevicesContext.Instance}, Path=IsRunning, Converter={StaticResource booleanToVisibilityClpsConverter}}"/>
+                        </StackPanel>
+
+                        <UniformGrid Columns="2" Grid.Row="5">
+                            <TextBlock Text="{Binding Captions}" TextWrapping="Wrap" FontSize="54" Foreground="Blue" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                            <TextBlock Text="{Binding Counts}" TextWrapping="Wrap" FontSize="54" Foreground="DarkCyan" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+                        </UniformGrid>
+                    </Grid>
+                </xctk:BusyIndicator>
+            </xctk:MaterialTabItem>
+            <xctk:MaterialTabItem Header="Playback"                                        
+                                  HorizontalContentAlignment="Center"                                        
+                                  Content="MaterialTabItem #4" 
+                                  IsEnabled="{Binding Source={x:Static vm:UserStepContext.Instance}, Path=StepToEnabledAndVisibilityStateDict[(vm:UserStep)Playback].Enabled }"
+                                  />
+
+        </xctk:MaterialTabControl>
+
+        <GridSplitter Grid.Column="1" Width="4" VerticalAlignment="Stretch" HorizontalAlignment="Center">
+            <!--<GridSplitter.Template>
+                <ControlTemplate TargetType="{x:Type GridSplitter}">
+                    <Grid>
+                        <Button Content="⁞" />
+                        <Rectangle Fill="#00FFFFFF" />
+                    </Grid>
+                </ControlTemplate>
+            </GridSplitter.Template>-->
+        </GridSplitter>
+
+        <Grid Grid.Column="2">
+            <uielemlog:LogView Margin="3,0,3,3" x:Name="_logView" DataContext="{Binding Path=LogViewModel}"></uielemlog:LogView>
+        </Grid>
+
+    </Grid>
+</Window>

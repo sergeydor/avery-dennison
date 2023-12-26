@@ -1,0 +1,405 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{32C53F76-E731-40C2-AED8-D38D789F20A3}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Client.UIApp</RootNamespace>
+    <AssemblyName>Client.UIApp</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=4.2.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.2.0\lib\net45\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.3.0.19026, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.3.0.19032, Culture=neutral, PublicKeyToken=669f0b5e8f868abf, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.3.0.19032, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MongoDB.Bson, Version=2.4.2.27, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Bson.2.4.2\lib\net45\MongoDB.Bson.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.Themes, Version=3.2.16567.21060, Culture=neutral, PublicKeyToken=ba83ff368b7563c6, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\Xceed.Wpf.Themes.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Themes.Metro, Version=3.2.16567.21060, Culture=neutral, PublicKeyToken=ba83ff368b7563c6, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\Xceed.Wpf.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Themes.Office2007, Version=3.2.16567.21060, Culture=neutral, PublicKeyToken=ba83ff368b7563c6, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\Xceed.Wpf.Themes.Office2007.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Themes.Windows10, Version=3.2.16567.21060, Culture=neutral, PublicKeyToken=ba83ff368b7563c6, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\Xceed.Wpf.Themes.Windows10.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.2.16567.21060, Culture=neutral, PublicKeyToken=ba83ff368b7563c6, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit.Themes.Metro, Version=3.2.16567.21060, Culture=neutral, PublicKeyToken=ba83ff368b7563c6, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\Xceed.Wpf.Toolkit.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit.Themes.Office2007, Version=3.2.16567.21060, Culture=neutral, PublicKeyToken=ba83ff368b7563c6, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\Xceed.Wpf.Toolkit.Themes.Office2007.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit.Themes.Windows10, Version=3.2.16567.21060, Culture=neutral, PublicKeyToken=ba83ff368b7563c6, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\Xceed.Wpf.Toolkit.Themes.Windows10.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Converters\BytesToBinStringConverter.cs" />
+    <Compile Include="Converters\BytesToHexStringConverter.cs" />
+    <Compile Include="Converters\ByteToHexStringConverter.cs" />
+    <Compile Include="Converters\EnabledStateEnumToBoolConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Converters\IsNotNullConverter.cs" />
+    <Compile Include="Converters\LaneDateTimeToDateTimeConverter.cs" />
+    <Compile Include="Converters\LastFaultToBrushConverter.cs" />
+    <Compile Include="Converters\LastFaultToStringConverter.cs" />
+    <Compile Include="Converters\LogItemToIconSourceConverter.cs" />
+    <Compile Include="Converters\PowerDeviceToUIValueConverter.cs" />
+    <Compile Include="Converters\SelectedDeviceVMIsSpecificToBoolConverter.cs" />
+    <Compile Include="Converters\UIntToHexStringConverter.cs" />
+    <Compile Include="Converters\VersionResultToStringConverter.cs" />
+    <Compile Include="Converters\BooleanToVisibilityClpsConverter.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="MainAppWindow.xaml.cs">
+      <DependentUpon>MainAppWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RemoteServices\Clients\AverySvcClient.cs" />
+    <Compile Include="UIElements\AntennaSettingsView\AntennaSettingsView.xaml.cs">
+      <DependentUpon>AntennaSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\AntennaSettingsView\AntennaSettingsViewModel.cs" />
+    <Compile Include="UIElements\AuxInSettingsView\AuxInSettingsView.xaml.cs">
+      <DependentUpon>AuxInSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\AuxInSettingsView\AuxInSettingsViewModel.cs" />
+    <Compile Include="UIElements\BasicConfigurationView\BasicConfigurationView.xaml.cs">
+      <DependentUpon>BasicConfigurationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\BasicConfigurationView\BasicConfigurationViewModel.cs" />
+    <Compile Include="UIElements\ConfigureReadWriteSettingsView\ConfigureReadWriteSettingsView.xaml.cs">
+      <DependentUpon>ConfigureReadWriteSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\ConfigureReadWriteSettingsView\ConfigureReadWriteSettingsViewModel.cs" />
+    <Compile Include="UIElements\ConveyorSettingsView\ConveyorSettingsViewModel.cs" />
+    <Compile Include="UIElements\EncoderSettingsView\EncoderSettingsView.xaml.cs">
+      <DependentUpon>EncoderSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\EncoderSettingsView\EncoderSettingsViewModel.cs" />
+    <Compile Include="UIElements\GPIOSettingsView\GPIOSettingsView.xaml.cs">
+      <DependentUpon>GPIOSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\GPIOSettingsView\GPIOSettingsViewModel.cs" />
+    <Compile Include="UIElements\HeaderTextBlock.xaml.cs">
+      <DependentUpon>HeaderTextBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\MarkerSettingsView\MarkerSettingsView.xaml.cs">
+      <DependentUpon>MarkerSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\MarkerSettingsView\MarkerSettingsViewModel.cs" />
+    <Compile Include="UIElements\PuncherSettingsView\PuncherSettingsView.xaml.cs">
+      <DependentUpon>PuncherSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\PuncherSettingsView\PucherSettingsViewModel.cs" />
+    <Compile Include="UIElements\ReaderSettingsView\ReaderSettingsView.xaml.cs">
+      <DependentUpon>ReaderSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\ReaderSettingsView\ReaderSettingsViewModel.cs" />
+    <Compile Include="UIElements\SensitivitySettingsView\SensivitySettingsViewModel.cs" />
+    <Compile Include="UIElements\SetStatisticsView\SetStatisticsViewModel.cs" />
+    <Compile Include="UIElements\TagIDFilterSettingsView\TagIDFilterSettingsViewModel.cs" />
+    <Compile Include="UIElements\TestModeFlagsView\TestModeFlagsViewModel.cs" />
+    <Compile Include="UIElements\TextBoxBits.cs" />
+    <Compile Include="UIElements\TextBoxDigits.cs" />
+    <Compile Include="UIElements\TextBoxHexDigits.cs" />
+    <Compile Include="UIElements\TIDSettingsView\TIDSettingsViewModel.cs" />
+    <Compile Include="UIElements\TriggerInputSettingsView\TriggerInputSettingsView.xaml.cs">
+      <DependentUpon>TriggerInputSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\TriggerInputSettingsView\TriggerInputSettingsViewModel.cs" />
+    <Compile Include="UIHelper\RoutedEventArgs.cs" />
+    <Compile Include="ViewModels\DevicesContext.cs" />
+    <Compile Include="ViewModels\MainAppWindowViewModel.cs" />
+    <Compile Include="UIElements\SensitivitySettingsView\SensitivitySettingsView.xaml.cs">
+      <DependentUpon>SensitivitySettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\TagIDFilterSettingsView\TagIDFilterSettingsView.xaml.cs">
+      <DependentUpon>TagIDFilterSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\RealTimeViewModel.cs" />
+    <Compile Include="ViewModels\SettingsScreenViewModel.cs" />
+    <Compile Include="UIElements\TIDSettingsView\TIDSettingsView.xaml.cs">
+      <DependentUpon>TIDSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\InitializationView\InitializationView.xaml.cs">
+      <DependentUpon>InitializationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\LabelBlock.xaml.cs">
+      <DependentUpon>LabelBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\LabelSectionBlock.xaml.cs">
+      <DependentUpon>LabelSectionBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\SetStatisticsView\SetStatisticsView.xaml.cs">
+      <DependentUpon>SetStatisticsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\TestModeFlagsView\TestModeFlagsView.xaml.cs">
+      <DependentUpon>TestModeFlagsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIHelper\BaseView.cs" />
+    <Compile Include="UIElements\LogView\CommonLogItem.cs" />
+    <Compile Include="UIElements\LogView\DeviceCommandLogItem.cs" />
+    <Compile Include="UIElements\LogView\LogItem.cs" />
+    <Compile Include="UIElements\LogView\LogView.xaml.cs">
+      <DependentUpon>LogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\LogView\LogViewModel.cs" />
+    <Compile Include="UIHelper\AttachedProperties.cs" />
+    <Compile Include="UIHelper\UIHelper.cs" />
+    <Compile Include="ViewModels\DeviceIdentityViewModel.cs" />
+    <Compile Include="ViewModels\InitializeScreenViewModel.cs" />
+    <Compile Include="ViewModels\SettingsScreenViewModelAPIPart.cs" />
+    <Compile Include="ViewModels\UserStepContext.cs" />
+    <Compile Include="ViewModels\ViewModelCommonBase.cs" />
+    <Page Include="MainAppWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Themes\DevicesListViewStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Themes\ElementStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TempSettingsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TempSettingsWindow.xaml.cs">
+      <DependentUpon>TempSettingsWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="UIElements\AntennaSettingsView\AntennaSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\AuxInSettingsView\AuxInSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\BasicConfigurationView\BasicConfigurationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\ConfigureReadWriteSettingsView\ConfigureReadWriteSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\EncoderSettingsView\EncoderSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\GPIOSettingsView\GPIOSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\HeaderTextBlock.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UIElements\MarkerSettingsView\MarkerSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\PuncherSettingsView\PuncherSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\ReaderSettingsView\ReaderSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\SensitivitySettingsView\SensitivitySettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UIElements\TagIDFilterSettingsView\TagIDFilterSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\TIDSettingsView\TIDSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UIElements\InitializationView\InitializationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\LabelBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\LabelSectionBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\LogView\LogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\SetStatisticsView\SetStatisticsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\TestModeFlagsView\TestModeFlagsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\TriggerInputSettingsView\TriggerInputSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Client.Server.Communication\Client.Server.Communication.csproj">
+      <Project>{5b0b3292-51d8-41b7-a0e3-fc3b30cf1573}</Project>
+      <Name>Client.Server.Communication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{dd3c8139-1fd5-4340-a660-6b29ef710fa1}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\Log\Info.ico" />
+    <Resource Include="Resources\Icons\Log\Trace.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\Log\Warning.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\Log\Error.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\avery2.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\avery1.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

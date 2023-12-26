@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <configSections>
+    <section name="devices" type="Common.Infrastructure.Devices.DeviceConfigSection, Common" allowLocation="true" allowDefinition="Everywhere" />
+    <section name="conveyorSettings" type="Simulator.Svc.Infrastructure.Config.ConveyorSettingsSection, Simulator.Svc" allowLocation="true" allowDefinition="Everywhere"/>
+    <section name="simulatorSettings" type="Simulator.Svc.Infrastructure.Config.SimulatorSettingsSection, Simulator.Svc" allowLocation="true" allowDefinition="Everywhere"/>
+  </configSections>
+  <startup>
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.5.2" />
+  </startup>
+<<<<<<< HEAD
+  <devices vendorId="04D8" readerProductId="003F" gpioProductId="0040" readersCount="1" />
+  <conveyorSettings totalDistanceInMm="10000" 
+                    tagLengthInMm="40" 
+                    distanceBetweenTagsInMm="20" 
+                    tagsCountPerOneLane="100" 
+                    encoderReaderTagsDistance="10" 
+                    readerMarkerTagsDistance="5" 
+                    markerPuncherTagsDistance="5"
+                    timerCicleLengthMs="65536"/>
+  <simulatorSettings encoderStepsPerTag="3" scannerStepInMm="13.3" velocityTagsPerMSec="0.04" encoderStepInMsec="10" testTagsNumber="10000" threadSleepMs="5000"/>
+=======
+  <devices vendorId="04D8" readerProductId="003F" gpioProductId="0040" readersCount="2" />
+  
+  <!--<conveyorSettings timerCicleLengthMs="65536"/>-->  
+  <!--<simulatorSettings threadSleepMs="5000"/>-->
+  
+>>>>>>> d0210d5924e1013db284fc6bd2437a030c73b6e4
+  <appSettings>
+    <add key="dsfPath" value="c:\Program Files\dsf\softehci\"/>
+    <add key="ThreadSleepMs" value="5000"/>
+  </appSettings>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+		<dependentAssembly>
+			<assemblyIdentity name="NLog" publicKeyToken="5120e14c03d0593c" culture="neutral" />
+			<bindingRedirect oldVersion="0.0.0.0-4.0.0.0" newVersion="4.0.0.0" />
+		</dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Autofac" publicKeyToken="17863af14b0044da" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-4.2.0.0" newVersion="4.2.0.0" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+
+  <system.serviceModel>
+    <bindings>
+      <netTcpBinding>
+        <binding name="WCFSimulatorHostNetTcpBinding" maxReceivedMessageSize="20000000" maxBufferSize="20000000" maxBufferPoolSize="20000000" receiveTimeout="00:00:10" sendTimeout="00:00:10">
+          <readerQuotas maxDepth="32" maxArrayLength="200000000" maxStringContentLength="200000000" />
+        </binding>
+      </netTcpBinding>
+    </bindings>
+    <behaviors>
+      <serviceBehaviors>
+        <behavior name="WCFSimulatorClientBehaviour">
+          <serviceDebug includeExceptionDetailInFaults="true" />
+          <serviceMetadata />
+        </behavior>
+      </serviceBehaviors>
+    </behaviors>
+    <services>
+      <service behaviorConfiguration="WCFSimulatorClientBehaviour" name="Simulator.Svc.RemoteServices.SimulatorSvc">
+        <endpoint address="" binding="netTcpBinding" bindingConfiguration="WCFSimulatorHostNetTcpBinding" name="WCFSimulatorHostNetTcpEndPoint" contract="Server.Device.Communication.RemoteServices.ServiceContracts.ISimulatorSvc">
+          <identity>
+            <dns value="localhost" />
+          </identity>
+        </endpoint>
+        <endpoint address="mex" binding="mexTcpBinding" bindingConfiguration="" name="AveryServiceHostMexEP" contract="IMetadataExchange" />
+        <host>
+          <baseAddresses>
+            <add baseAddress="net.tcp://localhost:8067/SimulatorSvc" />
+          </baseAddresses>
+        </host>
+      </service>
+    </services>
+  </system.serviceModel>
+</configuration>

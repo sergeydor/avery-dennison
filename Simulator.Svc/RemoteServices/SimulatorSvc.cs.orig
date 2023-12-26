@@ -1,0 +1,228 @@
+﻿using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using Common.Domain.Conveyor;
+using Common.Domain.Device;
+using Common.Enums;
+using Common.Infrastructure.Devices;
+using Common.Infrastructure.Extensions;
+using Common.Services;
+using Common.Services.Output;
+using Server.Device.Communication.RemoteServices.ServiceContracts;
+using Simulator.Svc.Context;
+using Simulator.Svc.Infrastructure;
+using Simulator.Svc.Infrastructure.Devices;
+using Simulator.Svc.Services;
+using Server.Device.Communication.Domain;
+using Common.Services.Input;
+using Server.Device.Communication.Infrastructure.Logging;
+
+namespace Simulator.Svc.RemoteServices
+{
+	public class SimulatorSvc : ServiceBase, ISimulatorSvc
+	{
+		private readonly HidDeviceFactory _deviceFactory;
+		private readonly DeviceProcessingService _deviceProcessingService;
+		private readonly DeviceProcessingContext _context;
+		private readonly ConveyorSettings _conveyorSettings;
+		private readonly SimulatorSettings _simulatorSettings;
+		private Thread _thread;
+
+		public SimulatorSvc(MongoDbLogger logger, HidDeviceFactory deviceFactory, DeviceProcessingService deviceProcessingService, 
+			DeviceProcessingContext context) : base(logger)
+		{
+			_deviceFactory = deviceFactory;
+			_deviceProcessingService = deviceProcessingService;
+			_context = context;
+			_simulatorSettings = SimulatorSettingsSingleton.GetInstance();
+			_conveyorSettings = ConveyorSettingsSingleton.GetInstance();
+		}
+
+		public SvcOutputGeneric<DeviceConfig> Initialize(SvcInputGeneric<int> readersCountInput)
+		{
+			var result = new SvcOutputGeneric<DeviceConfig>();
+
+<<<<<<< HEAD
+			RunCode(null, result, () =>
+			{
+				var config = (DeviceConfigSection)ConfigurationManager.GetSection("devices");
+				DeviceConfig deviceConfig = config.GetDeviceConfig();
+
+				var devices = _deviceFactory.CreateDevices(deviceConfig);
+=======
+			var config = (DeviceConfigSection)ConfigurationManager.GetSection("devices");
+			DeviceConfig deviceConfig = config.GetDeviceConfig();
+            deviceConfig.NumberOfReadersSetOnUI = readersCountInput.Input;
+
+            var devices = _deviceFactory.CreateDevices(deviceConfig);
+>>>>>>> bcc9124db88fff15db731fb70b55c1614a5c9dcf
+
+				_context.GPIO = devices.FirstOrDefault(x => x.DeviceType == DeviceType.GPIO) as GPIODevice;
+				var readers = devices.Where(x => x.DeviceType == DeviceType.Reader);
+				foreach (var reader in readers)
+				{
+					_context.Readers.Add(reader as ReaderDevice);
+				}
+
+				// setup simulator settings
+				//SetupConveyorSettings();
+				//SetupSimulator();
+
+				_thread = new Thread(() => _deviceProcessingService.ListenToDevices());
+				_thread.Start();
+
+				result.Output = deviceConfig;
+			});
+			
+			return result;
+		}
+
+		public SvcOutputGeneric<long> GetTimerOffset()
+		{
+			var result = new SvcOutputGeneric<long>();
+
+			var timerOffset = long.Parse(ConfigurationManager.AppSettings["timerOffset"]);
+			result.Output = timerOffset;
+
+			return result;
+		}
+
+		public SvcOutputBase ReinstallDsf()
+		{
+			var result = new SvcOutputBase();
+
+			RunCode(null, result, () =>
+			{
+				_thread?.Abort();
+				int unplugedDevicesCount = _deviceFactory.UnplugDevices();
+
+				_context.GPIO = null;
+				_context.Readers.Clear();
+
+				if (unplugedDevicesCount == 0)
+				{
+					var proc = new ProcessStartInfo();
+					string dsfPath = ConfigurationManager.AppSettings["dsfPath"];
+					string fileName = Path.Combine(dsfPath, "softehcicfg.exe");
+					if (!File.Exists(fileName))
+					{
+						throw new FileNotFoundException("Path to softehcicfg.exe is not correct. Please, set correct path to App.config key 'dsfPath'");
+					}
+
+					proc.FileName = fileName;
+					proc.Arguments = "/remove";
+					Process.Start(proc);
+					Thread.Sleep(200);
+
+					proc.Arguments = "/install";
+					Process.Start(proc);
+				}
+			});
+
+			return result;
+		}
+
+		public SvcOutputBase ExcludeDevices(List<DeviceIdentity> devices)
+		{
+			var result = new SvcOutputBase();
+
+			base.RunCode(null, result, () =>
+			{
+				if (devices != null)
+				{
+					_deviceProcessingService.ExcludeDevices(devices);
+				}
+			});
+
+			return result;
+		}
+
+        /*
+		public SvcOutputGeneric<ConveyorSettings> GetConveyorSettings()
+		{
+			var result = new SvcOutputGeneric<ConveyorSettings>();
+
+			base.RunCode(null, result, () =>
+			{
+				if (_conveyorSettings.TagLengthInMm > 0 && _conveyorSettings.DistanceBetweenTagsInMm > 0 && _conveyorSettings.TotalDistanceInMm > 0)
+				{
+					//double totalTags = (_conveyorSettings.TotalDistanceInMm + _conveyorSettings.DistanceBetweenTagsInMm) / (_conveyorSettings.TagLengthInMm + _conveyorSettings.DistanceBetweenTagsInMm);
+					//_conveyorSettings.TagsCountPerOneLane = Convert.ToInt32(totalTags);
+				}
+				else
+				{ // assume 100 tags (columns) are on conveyor
+					_conveyorSettings.TagsCountPerOneLane = _conveyorSettings.TagsCountPerOneLane;
+				}
+
+				result.Output = _conveyorSettings;
+			});
+
+			return result;
+		}*/
+
+		public SvcOutputBase Reset()
+		{
+			var result = new SvcOutputBase();
+
+			base.RunCode(null, result, () =>
+			{
+				_deviceProcessingService.Reset();
+			});
+
+			return result;
+		}
+
+        public SvcOutputBase SetSimulatorSettings(SvcInputGeneric<SimulatorSettings> input)
+        {
+            var result = new SvcOutputBase();
+            base.RunCode(input, result, () =>
+            {
+                _simulatorSettings.DistanceBetweenTagsInMm = input.Input.DistanceBetweenTagsInMm;
+                _simulatorSettings.EncoderReaderTagsDistance = input.Input.EncoderReaderTagsDistance;
+                _simulatorSettings.EncoderStepsPerTag = input.Input.EncoderStepsPerTag;
+                _simulatorSettings.TagLengthInMm = input.Input.TagLengthInMm;
+                _simulatorSettings.TestTagsNumber = input.Input.TestTagsNumber;
+                _simulatorSettings.VelocityTagsPerMSec = input.Input.VelocityTagsPerMSec;
+            });
+            return result;            
+        }
+
+        /*
+		private void SetupConveyorSettings()
+		{
+			var conveyorSettingsConfig = (ConveyorSettingsSection)ConfigurationManager.GetSection("conveyorSettings");
+			var deviceConfig = (DeviceConfigSection) ConfigurationManager.GetSection("devices");
+
+			_conveyorSettings.TotalLanes = deviceConfig.ReadersCount;
+			_conveyorSettings.TotalDistanceInMm = conveyorSettingsConfig.TotalDistanceInMm;
+			_conveyorSettings.TagLengthInMm = conveyorSettingsConfig.TagLengthInMm;
+			_conveyorSettings.DistanceBetweenTagsInMm = conveyorSettingsConfig.DistanceBetweenTagsInMm;
+			_conveyorSettings.TagsCountPerOneLane = conveyorSettingsConfig.TagsCountPerOneLane;
+			_conveyorSettings.EncoderReaderTagsDistance = conveyorSettingsConfig.EncoderReaderTagsDistance;
+			_conveyorSettings.ReaderMarkerTagsDistance = conveyorSettingsConfig.ReaderMarkerTagsDistance;
+			_conveyorSettings.MarkerPuncherTagsDistance = conveyorSettingsConfig.MarkerPuncherTagsDistance;
+			_conveyorSettings.TimerCicleLengthMs = conveyorSettingsConfig.TimerCicleLengthMs;
+		}*/
+
+        /*
+		private void SetupSimulator()
+		{
+			var conveyorSettings = (ConveyorSettingsSection) ConfigurationManager.GetSection("conveyorSettings");
+			var simulatorSettings = (SimulatorSettingsSection)ConfigurationManager.GetSection("simulatorSettings");
+
+			_simulatorSettings.EncoderStepsPerTag = simulatorSettings.EncoderStepsPerTag;
+			_simulatorSettings.ScannerStepInMm = simulatorSettings.ScannerStepInMm;
+			_simulatorSettings.EncoderStepInMsec = simulatorSettings.EncoderStepInMsec;
+
+			_simulatorSettings.TagLengthInMm = conveyorSettings.TagLengthInMm;
+			_simulatorSettings.DistanceBetweenTagsInMm = conveyorSettings.DistanceBetweenTagsInMm;
+			_simulatorSettings.VelocityTagsPerMSec = simulatorSettings.VelocityTagsPerMSec;
+			_simulatorSettings.VelocityInMMPerMSec = _simulatorSettings.VelocityTagsPerMSec * (_simulatorSettings.TagLengthInMm + _simulatorSettings.DistanceBetweenTagsInMm);
+			_simulatorSettings.TestTagsNumber = simulatorSettings.TestTagsNumber;
+			//_simulatorSettings.PredicatedConveyorMoveTimeMs = simulatorSettings.ThreadSleepMs;
+		}*/
+    }
+}

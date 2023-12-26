@@ -1,0 +1,53 @@
+#pragma once
+
+#include <iostream>
+#include <string>  
+#include <vector>
+#include <msclr\marshal_cppstd.h>
+#include "hidapi.h"
+#include "UMConveyorShot.h"
+#include "Server.Svc.Unmanaged.h"
+
+
+using namespace System;
+using namespace ServerSvcUnmanaged;
+using namespace Common::Domain;
+using namespace System::Collections::Generic;
+using namespace Server::Device::Communication::Domain;
+using namespace Common::Domain::Device;
+using namespace Common::Services::Output; 
+using namespace Common::Infrastructure::ErrorHandling::Output;
+using namespace Common::Infrastructure::ErrorHandling::Enums;
+using namespace Server::Device::Communication::Enums;
+
+public ref class ProcessingSvcFacade
+{
+private: 
+	DeviceManager* _deviceManager;
+
+public:	
+	ProcessingSvcFacade();	
+
+	List<DeviceCommand^>^ GetOutgoingDataByDevice(DeviceIdentity deviceIdentity);
+	List<DeviceCommand^>^ GetIncommingDataByDevice(DeviceIdentity deviceIdentity);
+	void SendDataToDevice(DeviceCommand commandData);	
+	void StopTestInternalProcessing();
+	void StartTestInternalProcessing();
+
+	List<Conveyor::ConveyorShot^>^ Test(String^ str, System::DateTime dt);
+
+<<<<<<< HEAD
+	InitializeStatus^ Initialize(Common::Domain::Device::DeviceConfig^ config);
+	void SetConveyorSettings(Conveyor::ConveyorSettings^ conveyorSettings);
+
+	List<DeviceIdentity^>^ GetDeviceListInfo();
+=======
+	void Initialize(Common::Domain::Device::DeviceConfig^ config);
+>>>>>>> 230a3956d1ef7dc9ba6b2d504faa6a48e6345941
+
+private:
+	List<Conveyor::ConveyorShot^>^ ConvertShapshots(std::vector<ConveyorShot>& from);
+	String^ ToString(std::string str);
+	std::string ToStdString(String^ str);
+};
+

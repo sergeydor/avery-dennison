@@ -1,0 +1,28 @@
+﻿<UserControl x:Class="Client.UIApp.UIElements.GPIOSettingsView.GPIOSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Client.UIApp.UIElements.GPIOSettingsView"
+             mc:Ignorable="d" 
+             xmlns:le="clr-namespace:Client.UIApp.UIElements"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             DataContext="{Binding}"
+             >
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="180px"/>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <le:LabelSectionBlock Grid.Row="0" Margin="0,0,0,0" Foreground="Black" Grid.ColumnSpan="4">GPIO Settings</le:LabelSectionBlock>
+
+        <xctk:DoubleUpDown  Grid.Row="1"  Margin="0,5,0,0" Grid.ColumnSpan="2" Minimum="1" Maximum="6000" Value="{Binding HighSpeedTestModeTimer.D1D0}"/>
+        <le:LabelBlock Grid.Row="1" Grid.Column="2" Margin="10,5,0,0" Grid.ColumnSpan="2">D1D0</le:LabelBlock>
+    </Grid>
+</UserControl>

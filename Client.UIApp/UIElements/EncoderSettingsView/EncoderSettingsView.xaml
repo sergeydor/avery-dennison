@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="Client.UIApp.UIElements.EncoderSettingsView.EncoderSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Client.UIApp.UIElements.EncoderSettingsView"
+             mc:Ignorable="d" 
+             xmlns:le="clr-namespace:Client.UIApp.UIElements"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             DataContext="{Binding}"
+             >
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="180px"/>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <le:LabelSectionBlock Grid.Row="0" Margin="0,0,0,0" Foreground="Black" Grid.ColumnSpan="4">Encoder Settings</le:LabelSectionBlock>
+
+        <xctk:DoubleUpDown  Grid.Row="1"  Margin="0,5,0,0" Grid.ColumnSpan="2" Minimum="0" Maximum="65535" Value="{Binding Path=EncoderSettings.TriggerFilterMin}"/>
+        <le:LabelBlock Grid.Row="1" Grid.Column="2" Margin="10,5,0,0" Grid.ColumnSpan="2">Trigger Filter Min</le:LabelBlock>
+
+        <xctk:DoubleUpDown  Grid.Row="2"  Margin="0,5,0,0" Grid.ColumnSpan="2" Minimum="0" Maximum="65535" Value="{Binding Path=EncoderSettings.TriggerFilterMax}"/>
+        <le:LabelBlock Grid.Row="2" Grid.Column="2" Margin="10,5,0,0" Grid.ColumnSpan="2">Trigger Filter Max</le:LabelBlock>
+
+        <xctk:DoubleUpDown  Grid.Row="3"  Margin="0,5,0,0" Grid.ColumnSpan="2" Minimum="0" Maximum="65535" Value="{Binding Path=EncoderSettings.TesterOffset}"/>
+        <le:LabelBlock Grid.Row="3" Grid.Column="2" Margin="10,5,0,0" Grid.ColumnSpan="2">Tester Offset</le:LabelBlock>
+
+        <xctk:DoubleUpDown  Grid.Row="4"  Margin="0,5,0,0" Grid.ColumnSpan="2" Minimum="0" Maximum="65535" Value="{Binding Path=EncoderSettings.MarkerOffset}"/>
+        <le:LabelBlock Grid.Row="4" Grid.Column="2" Margin="10,5,0,0" Grid.ColumnSpan="2">Marker Offset</le:LabelBlock>
+
+        <xctk:DoubleUpDown  Grid.Row="5"  Margin="0,5,0,0" Grid.ColumnSpan="2" Minimum="0" Maximum="65535" Value="{Binding Path=EncoderSettings.PunchOffset}"/>
+        <le:LabelBlock Grid.Row="5" Grid.Column="2" Margin="10,5,0,0" Grid.ColumnSpan="2">Punch Offset</le:LabelBlock>
+
+        <xctk:DoubleUpDown  Grid.Row="6"  Margin="0,5,0,0" Grid.ColumnSpan="2" Minimum="0" Maximum="65535" Value="{Binding Path=EncoderSettings.PunchFlight}"/>
+        <le:LabelBlock Grid.Row="6" Grid.Column="2" Margin="10,5,0,0" Grid.ColumnSpan="2">Punch Flight</le:LabelBlock>
+    </Grid>
+</UserControl>

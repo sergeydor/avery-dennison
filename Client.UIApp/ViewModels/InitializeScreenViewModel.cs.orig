@@ -1,0 +1,267 @@
+﻿using Client.UIApp.RemoteServices.Clients;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Timers;
+using System.Windows.Threading;
+using Common.Domain.Device;
+using Common.Services.Input;
+using Client.Server.Communication.RemoteServices.Dtos.Output;
+using Client.UIApp.UIElements.LogView;
+using Common.Services.Output;
+using System.Configuration;
+
+namespace Client.UIApp.ViewModels
+{
+    public class InitializeScreenViewModel : ViewModelCommonBase
+    {
+		public RelayCommand InitializeCommand { get; set; }
+        public RelayCommand InitializeStep2Command { get; set; }
+        public RelayCommand<IEnumerable<DeviceIdentityViewModel>> OpenDebugSettingsCommand { get; set; }
+		public RelayCommand ReinstallDsfCommand { get; set; }
+		public RelayCommand ResetCommand { get; set; }
+
+		public ObservableCollection<DeviceIdentityViewModel> DevicesViewModels { get; set; } = new ObservableCollection<DeviceIdentityViewModel>();
+        //private AverySvcClient client = new AverySvcClient();
+
+	    private const int InitializeTimer = 3000;
+		private DispatcherTimer _timer = new DispatcherTimer();
+		private List<string> addedMacAddresses = new List<string>();
+
+	    public bool InitializeClicked { get; set; } = false;
+        public bool Step2Clicked { get; set; } = false;
+	    public bool ReinstallDsfClicked { get; set; } = false;
+	    public bool ResetClicked { get; set; } = false;
+	    public bool DevicesListEmpty { get; set; } = true;
+
+        public InitializeScreenViewModel(LogViewModel logViewModel) : base(logViewModel)
+        {
+			InitializeCommand = new RelayCommand(InitializeCommandHandler, CanExecuteInitializeHandler);
+            InitializeStep2Command = new RelayCommand(InitializeStep2CommandHandler, CanExecuteInitializeStep2CommandHandler);
+			ReinstallDsfCommand = new RelayCommand(ReinstallDsfCommandHandler, CanExecuteReinstallDsfCommandHandler);
+			ResetCommand = new RelayCommand(ResetCommandHandler, CanExecuteResetCommandHandler);
+            this.LogViewModel = logViewModel;
+        }
+
+        private bool? _isDebugMode = null;
+        public bool IsDebugMode
+        {
+            get
+            {
+                if(!_isDebugMode.HasValue)
+                {
+                    _isDebugMode = bool.Parse(ConfigurationManager.AppSettings["IsDebugMode"]);
+                }
+                return _isDebugMode.Value;
+            }
+        }
+        
+        private void InitializeCommandHandler()
+        {
+            SafeCall(client =>
+            {
+                LogViewModel.AppendMessage("Devices initialization...");
+
+                var preInitOutput = client.PreInitialize();
+
+                if (!preInitOutput.IsOk)
+                {
+                    LogViewModel.AppendWarning("Something went wrong while pre-initializing (STEP 1) devices...");
+                    LogViewModel.AppendWarning(preInitOutput.ToString());
+                    return;
+                }
+
+                var initOutput = client.Initialize(new SvcInputGeneric<DeviceConfig> { Input = preInitOutput.Output });
+
+                if (!initOutput.IsOk)
+                {
+                    LogViewModel.AppendWarning("Something went wrong while initializing (STEP 1) devices...");
+                    LogViewModel.AppendWarning(initOutput.ToString());
+                    return;
+                }
+
+                DevicesViewModels.Clear();
+                bool installed = GetAndRefreshDevices(client);
+
+                if (!installed)
+                {
+                    _timer.Interval = TimeSpan.FromMilliseconds(InitializeTimer);
+                    _timer.Tick += timer_Elapsed;
+                    _timer.Start();
+                }
+                InitializeClicked = true;
+                RaisePropertyChanged(() => InitializeCommand);
+            });
+           
+            RaiseCanExecuteChanged();
+        }
+
+        private void timer_Elapsed(object sender, EventArgs e)
+        {
+            SafeCall(client =>
+            {
+                bool installed = GetAndRefreshDevices(client);
+                if (installed)
+                {
+                    LogViewModel.AppendMessage("Devices initialization...OK");
+                    _timer.Stop();
+                }
+                else
+                {
+                    LogViewModel.AppendMessage("Devices intialization is in progress...");
+                }
+            });
+		}
+
+        private bool GetAndRefreshDevices(AverySvcClient client)
+        {
+            CheckDevicesInstalledOutput initStatusResult = client.CheckDevicesInitStatus();
+            if (!initStatusResult.IsOk)
+            {
+                LogViewModel.AppendWarning(initStatusResult.ToString());
+                return false;
+            }
+            var devicesRes = client.GetInitializedDevices();
+            if (!devicesRes.IsOk)
+            {
+                LogViewModel.AppendWarning(devicesRes.ToString());
+                return false;
+            }
+            List<DeviceIdentity> devices = devicesRes.Output;
+
+            RefreshDevicesList(devices);
+            return initStatusResult.Installed;
+        }
+
+	    private void RefreshDevicesList(List<DeviceIdentity> devices)
+	    {
+			foreach (var device in devices)
+			{
+				if (addedMacAddresses.Contains(device.MacAddress)) // TODO - review
+				{
+					continue;
+				}
+				addedMacAddresses.Add(device.MacAddress);
+				DevicesViewModels.Add(new DeviceIdentityViewModel() { DeviceIdentity = device });
+				RaisePropertyChanged(() => DevicesViewModels);
+				LogViewModel.AppendMessage($"Device with MAC address {device.MacAddress} installed successfully...");
+			}
+		}
+
+        private void InitializeStep2CommandHandler()
+        {
+            SafeCall(client => 
+            {
+                LogViewModel.AppendMessage("Devices initialization step2 - lanes setup...");
+
+                List<DeviceIdentity> devices = DevicesViewModels.Select(x => x.DeviceIdentity).ToList();
+
+                SvcOutputBase callResult = client.InitializeStep2(new SvcInputGeneric<List<DeviceIdentity>> { Input = devices });
+
+                if (!callResult.IsOk)
+                {
+                    LogViewModel.AppendWarning("[ERROR] Something went wrong while initializing (STEP 2) devices...");
+                    LogViewModel.AppendWarning(callResult.ToString());
+                    return;
+                }
+                _timer.Stop();
+                LogViewModel.AppendMessage("Devices initialization step2 - lanes setup...OK");
+<<<<<<< HEAD
+				_client.StartDeviceListening();
+=======
+                client.StartDeviceListening();
+>>>>>>> 8bec4042ef3fef24a3d4a831b517448969c694c7
+                LogViewModel.AppendMessage("Devices listening started");
+                Step2Clicked = true;
+                RaiseCanExecuteChanged();
+            });
+            RaiseCanExecuteChanged();
+        }
+
+        private void ReinstallDsfCommandHandler()
+        {
+            SafeCall(client => {
+                LogViewModel.AppendMessage("Driver Simnulator Framework re-installation...");
+                SvcOutputBase res = client.ReinstallDsf();
+                if(!res.IsOk)
+                {
+                    LogViewModel.AppendWarning(res.ToString());
+                    return;
+                }
+                LogViewModel.AppendMessage("Driver Simnulator Framework re-installation...OK");
+				ReinstallDsfClicked = true;
+            });
+
+            RaiseCanExecuteChanged();
+	    }
+
+	    private void ResetCommandHandler()
+	    {
+		    SafeCall(() =>
+		    {
+			    LogViewModel.AppendMessage("Reset processing...");
+
+			    SvcOutputBase res = _client.Reset();
+			    if (!res.IsOk)
+			    {
+				    LogViewModel.AppendWarning(res.ToString());
+				    return;
+			    }
+
+				var devicesRes = _client.GetInitializedDevices();
+				if (!devicesRes.IsOk)
+				{
+					LogViewModel.AppendWarning(devicesRes.ToString());
+				}
+				List<DeviceIdentity> devices = devicesRes.Output;
+
+				RefreshDevicesList(devices);
+
+				LogViewModel.AppendMessage("Reset processing...OK");
+			    ResetClicked = true;
+			    DevicesListEmpty = devices.Count == 0;
+		    });
+
+			RaiseCanExecuteChanged();
+		}
+
+        private void RaiseCanExecuteChanged()
+        {
+            InitializeStep2Command.RaiseCanExecuteChanged();
+            InitializeCommand.RaiseCanExecuteChanged();
+            OpenDebugSettingsCommand.RaiseCanExecuteChanged();
+			ReinstallDsfCommand.RaiseCanExecuteChanged();
+			ResetCommand.RaiseCanExecuteChanged();
+        }
+
+        private bool CanExecuteInitializeStep2CommandHandler()
+        {
+            return (this.InitializeClicked || (ResetClicked && !DevicesListEmpty)) && !Step2Clicked;
+        }
+
+        private bool CanExecuteInitializeHandler()
+        {
+            return !InitializeClicked && ResetClicked && DevicesListEmpty;
+        }
+        
+        public bool CanExecuteOpenSettingsCommandHandler(IEnumerable<DeviceIdentityViewModel> items)
+        {
+            return true;
+        }
+
+	    public bool CanExecuteReinstallDsfCommandHandler()
+	    {
+			return !InitializeClicked && !Step2Clicked;
+		}
+
+	    public bool CanExecuteResetCommandHandler()
+	    {
+		    return !ReinstallDsfClicked && !InitializeClicked && !Step2Clicked;
+	    }
+    }
+}
